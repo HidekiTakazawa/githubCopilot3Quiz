@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三択クイズアプリ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+    .choices li {
+      margin: 10px 0;
+    }
+    .result {
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <ul class="choices" id="choices"></ul>
+      <div class="result" id="result"></div>
+      <button id="next" onclick="nextQuestion()">次の問題へ</button>
+    </div>
+  </div>
+  <script>
+    const quizData = [
+      {
+        question: "中国の首都はどこですか？",
+        choices: ["北京", "上海", "広州"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な夜市はどこですか？",
+        choices: ["士林夜市", "饒河街夜市", "六合夜市"],
+        correct: 0
+      },
+      // ここにさらに18問追加してください
+      {
+        question: "中国の最も長い川はどれですか？",
+        choices: ["長江", "黄河", "珠江"],
+        correct: 0
+      },
+      {
+        question: "台湾の首都はどこですか？",
+        choices: ["台北", "高雄", "台中"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な万里の長城はどの都市にありますか？",
+        choices: ["北京", "上海", "西安"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な観光地、九份はどの県にありますか？",
+        choices: ["新北市", "台中市", "台南市"],
+        correct: 0
+      },
+      {
+        question: "中国の国旗の色は何色ですか？",
+        choices: ["赤", "青", "緑"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な料理、牛肉麺はどの料理の一つですか？",
+        choices: ["中華料理", "日本料理", "韓国料理"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な山、黄山はどの省にありますか？",
+        choices: ["安徽省", "四川省", "雲南省"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な湖、日月潭はどの県にありますか？",
+        choices: ["南投県", "台東県", "花蓮県"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な建物、故宮博物院はどの都市にありますか？",
+        choices: ["北京", "上海", "広州"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な夜市、饒河街夜市はどの都市にありますか？",
+        choices: ["台北", "高雄", "台中"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な料理、北京ダックはどの料理の一つですか？",
+        choices: ["中華料理", "日本料理", "韓国料理"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な観光地、阿里山はどの県にありますか？",
+        choices: ["嘉義県", "台南市", "台中市"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な都市、上海はどの川の河口にありますか？",
+        choices: ["長江", "黄河", "珠江"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な観光地、太魯閣峡谷はどの県にありますか？",
+        choices: ["花蓮県", "台東県", "南投県"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な都市、広州はどの省にありますか？",
+        choices: ["広東省", "福建省", "浙江省"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な観光地、墾丁はどの県にありますか？",
+        choices: ["屏東県", "台東県", "花蓮県"],
+        correct: 0
+      },
+      {
+        question: "中国の有名な都市、成都はどの省にありますか？",
+        choices: ["四川省", "雲南省", "貴州省"],
+        correct: 0
+      },
+      {
+        question: "台湾の有名な観光地、玉山はどの県にありますか？",
+        choices: ["南投県", "台東県", "花蓮県"],
+        correct: 0
+      }
+    ];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    function loadQuestion() {
+      const currentQuestion = quizData[currentQuestionIndex];
+      document.getElementById('question').textContent = currentQuestion.question;
+      const choicesList = document.getElementById('choices');
+      choicesList.innerHTML = '';
+      const choices = [...currentQuestion.choices];
+      shuffle(choices);
+      choices.forEach((choice, index) => {
+        const li = document.createElement('li');
+        li.textContent = choice;
+        li.onclick = () => checkAnswer(index);
+        choicesList.appendChild(li);
+      });
+    }
+    function checkAnswer(selectedIndex) {
+      const currentQuestion = quizData[currentQuestionIndex];
+      const correctChoice = currentQuestion.choices[currentQuestion.correct];
+      const resultDiv = document.getElementById('result');
+      if (document.getElementById('choices').children[selectedIndex].textContent === correctChoice) {
+        resultDiv.textContent = '正解！';
+        score++;
+      } else {
+        resultDiv.textContent = '不正解！';
+      }
+      document.getElementById('next').style.display = 'block';
+    }
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+        document.getElementById('result').textContent = '';
+        document.getElementById('next').style.display = 'none';
+      } else {
+        document.getElementById('quiz').style.display = 'none';
+        document.getElementById('result').textContent = `全問終了！あなたの正解数は ${score} / ${quizData.length} です。`;
+      }
+    }
+    loadQuestion();
+  </script>
+</body>
+</html>
