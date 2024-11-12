@@ -51,6 +51,7 @@
 </head>
 <body>
   <div class="quiz-container">
+    <h1>中国を知る。三択クイズ</h1>
     <div id="quiz">
       <div class="question" id="question"></div>
       <ul class="choices" id="choices"></ul>
@@ -65,6 +66,7 @@
     </div>
   </div>
   <script>
+    const maxMondaisu = 10;
     const quizData = [
       {
         question: "中国の首都はどこですか？",
@@ -82,7 +84,7 @@
         question: "中国の有名な観光地、故宮博物院はどの都市にありますか？",
         choices: ["北京", "上海", "広州"],
         correct: 0,
-        explanation: "故宮博物院は北京にあり、中国最大の宮殿であり、世界遺産に登録されています。"
+        explanation: "故宮博物院は北京にあり、中国最大の宮殿であり、世界遺産に登録されています。詳しくは<a href='https://ja.wikipedia.org/wiki/%E6%95%85%E5%AE%AE%E5%8D%9A%E7%89%A9%E9%99%A2' target='_blank'>こちら</a>をご覧ください。"
       },
       {
         question: "台湾の最も高い山はどれですか？",
@@ -114,88 +116,91 @@
         correct: 0,
         explanation: "日月潭は南投県にあり、台湾で最も美しい湖の一つです。"
       },
-      // ここにさらに問題を追加してください
       {
         question: "中国の最も長い川はどれですか？",
         choices: ["長江", "黄河", "珠江"],
         correct: 0,
+        explanation: "長江は中国最長の川であり、全長は約6,300キロメートルです。"
       },
-      
-      
       {
         question: "中国の国旗の色は何色ですか？",
         choices: ["赤", "青", "緑"],
-        correct: 0
+        correct: 0,
+        explanation: "中国の国旗は赤色で、左上に黄色の星が描かれています。"
       },
-      
       {
         question: "中国の有名な山、黄山はどの省にありますか？",
         choices: ["安徽省", "四川省", "雲南省"],
-        correct: 0
-      },
-      {
-        question: "台湾の有名な湖、日月潭はどの県にありますか？",
-        choices: ["南投県", "台東県", "花蓮県"],
-        correct: 0
-      },
-      {
-        question: "中国の有名な建物、故宮博物院はどの都市にありますか？",
-        choices: ["北京", "上海", "広州"],
-        correct: 0
+        correct: 0,
+        explanation: "黄山は安徽省にあり、美しい風景で知られています。詳しくは<a href='https://ja.wikipedia.org/wiki/%E9%BB%84%E5%B1%B1' target='_blank'>こちら</a>をご覧ください。"
       },
       {
         question: "台湾の有名な夜市、饒河街夜市はどの都市にありますか？",
         choices: ["台北", "高雄", "台中"],
-        correct: 0
+        correct: 0,
+        explanation: "饒河街夜市は台北にあり、多くの美味しい食べ物が楽しめます。"
       },
-      
       {
         question: "台湾の有名な観光地、阿里山はどの県にありますか？",
         choices: ["嘉義県", "台南市", "台中市"],
-        correct: 0
+        correct: 0,
+        explanation: "阿里山は嘉義県にあり、美しい日の出と桜で有名です。"
       },
       {
         question: "中国の有名な都市、上海はどの川の河口にありますか？",
         choices: ["長江", "黄河", "珠江"],
-        correct: 0
+        correct: 0,
+        explanation: "上海は長江の河口に位置し、中国最大の都市です。"
       },
       {
         question: "台湾の有名な観光地、太魯閣峡谷はどの県にありますか？",
         choices: ["花蓮県", "台東県", "南投県"],
-        correct: 0
+        correct: 0,
+        explanation: "太魯閣峡谷は花蓮県にあり、壮大な景観が楽しめます。"
       },
       {
         question: "中国の有名な都市、広州はどの省にありますか？",
         choices: ["広東省", "福建省", "浙江省"],
-        correct: 0
+        correct: 0,
+        explanation: "広州は広東省にあり、中国南部の経済中心地です。"
       },
       {
         question: "台湾の有名な観光地、墾丁はどの県にありますか？",
         choices: ["屏東県", "台東県", "花蓮県"],
-        correct: 0
+        correct: 0,
+        explanation: "墾丁は屏東県にあり、美しいビーチで有名です。"
       },
       {
         question: "中国の有名な都市、成都はどの省にありますか？",
         choices: ["四川省", "雲南省", "貴州省"],
-        correct: 0
+        correct: 0,
+        explanation: "成都は四川省にあり、美味しい料理で知られています。"
       },
       {
         question: "台湾の有名な観光地、玉山はどの県にありますか？",
         choices: ["南投県", "台東県", "花蓮県"],
-        correct: 0
+        correct: 0,
+        explanation: "玉山は南投県にあり、台湾の最高峰です。"
       }
-
     ];
     let currentQuestionIndex = 0;
     let score = 0;
+    let selectedQuestions = [];
+
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
+
+    function selectRandomQuestions() {
+      shuffle(quizData);
+      selectedQuestions = quizData.slice(0, maxMondaisu);
+    }
+
     function loadQuestion() {
-      const currentQuestion = quizData[currentQuestionIndex];
+      const currentQuestion = selectedQuestions[currentQuestionIndex];
       document.getElementById('question').textContent = currentQuestion.question;
       const choicesList = document.getElementById('choices');
       choicesList.innerHTML = '';
@@ -208,8 +213,9 @@
         choicesList.appendChild(li);
       });
     }
+
     function checkAnswer(selectedIndex, selectedElement) {
-      const currentQuestion = quizData[currentQuestionIndex];
+      const currentQuestion = selectedQuestions[currentQuestionIndex];
       const correctChoice = currentQuestion.choices[currentQuestion.correct];
       const resultDiv = document.getElementById('result');
       const explanationDiv = document.getElementById('explanation');
@@ -222,30 +228,32 @@
       } else {
         resultDiv.textContent = '不正解！';
       }
-      explanationDiv.textContent = currentQuestion.explanation;
+      explanationDiv.innerHTML = currentQuestion.explanation;
       document.getElementById('next').style.display = 'block';
       speakChinese(selectedElement.textContent);
     }
+
     function nextQuestion() {
       currentQuestionIndex++;
-      if (currentQuestionIndex < quizData.length) {
+      if (currentQuestionIndex < selectedQuestions.length) {
         loadQuestion();
         document.getElementById('result').textContent = '';
         document.getElementById('explanation').textContent = '';
         document.getElementById('next').style.display = 'none';
       } else {
         document.getElementById('quiz').style.display = 'none';
-        document.getElementById('result').textContent = `全問終了！あなたの正解数は ${score} / ${quizData.length} です。`;
+        document.getElementById('result').textContent = `全問終了！あなたの正解数は ${score} / ${selectedQuestions.length} です。`;
         document.getElementById('result').style.display = 'block';
         document.getElementById('retry').style.display = 'block';
         document.getElementById('next').style.display = 'none'; // 次の問題へボタンを非表示にする
         document.getElementById('explanation').textContent = ''; // 最後の説明を非表示にする
       }
     }
+
     function retryQuiz() {
       currentQuestionIndex = 0;
       score = 0;
-      shuffle(quizData);
+      selectRandomQuestions();
       document.getElementById('quiz').style.display = 'block';
       document.getElementById('result').textContent = '';
       document.getElementById('explanation').textContent = '';
@@ -253,12 +261,14 @@
       document.getElementById('next').style.display = 'none';
       loadQuestion();
     }
+
     function speakChinese(text) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'zh-CN';
       speechSynthesis.speak(utterance);
     }
-    shuffle(quizData);
+
+    selectRandomQuestions();
     loadQuestion();
   </script>
 </body>
